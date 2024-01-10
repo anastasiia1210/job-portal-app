@@ -1,0 +1,16 @@
+@import '../variables.scss';
+
+.background-photo{
+img{
+  width: 100%;
+  filter: brightness(75%);
+  box-shadow: 0 10px 8px rgba(0, 0, 0, 0.4);
+}
+}
+
+.main-text{
+  color: $green;
+  display: flex;
+  justify-content: center;
+  font-size: 1.5em;
+}
