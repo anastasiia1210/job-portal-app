@@ -1,0 +1,30 @@
+@import '../variables.scss';
+.notifications-main-div{
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+
+  .notification-div {
+    margin: 10px auto 10px auto;
+    min-height: 30px;
+    width: 53.3%;
+    padding: 15px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+
+    p {
+      margin: 10px 0 0 0;
+    }
+    .name{
+      color: $green;
+      font-size: 18px;
+      display: inline;
+      text-decoration: none;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
+}

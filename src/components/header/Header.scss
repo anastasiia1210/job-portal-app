@@ -1,26 +1,40 @@
 @import '../variables.scss';
 
-header {
-  width: 100%;
+.headerClass {
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .headerText {
+    padding: 0 20px 0 20px;
+    color: white;
+    text-decoration: none;
+
+    &:hover, &.active {
+      color: $yellow;
+    }
+  }
+.rightSeekerData{
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-}
-.headerText{
-  padding: 0 20px 0 20px;
-  color: white;
-  text-decoration: none;
-  &:hover, &.active{
-    color: $yellow;
+  a{
+    padding: 0 0 0 20px;
+    font-size: 20px;
   }
 }
 
-.firstHeader {
-  height: 50px;
-  justify-content: space-between;
-  background-color: $light-green;
-}
-.secondHeader {
-  height: 40px;
-  background-color: $green;
-}
+  .firstHeader {
+    height: 50px;
+    justify-content: space-between;
+    background-color: $light-green;
+  }
 
+  .secondHeader {
+    height: 40px;
+    background-color: $green;
+  }
+}

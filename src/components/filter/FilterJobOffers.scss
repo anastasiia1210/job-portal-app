@@ -18,6 +18,7 @@
     margin-right: 8px;
     font-size: 14px;
     width: 50%;
+
   }
 
   .search-job-offer-button {
@@ -49,7 +50,6 @@
       padding: 8px;
       border: 1px solid $gray;
       border-radius: 3px;
-      background-color: $background;
       color: $green;
 
       &:focus {

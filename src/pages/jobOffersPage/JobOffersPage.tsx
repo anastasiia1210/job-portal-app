@@ -6,7 +6,6 @@ function JobOffersPage() {
 
   return (
     <>
-        <FilterJobOffers />
        <JobOffers />
     </>
   )

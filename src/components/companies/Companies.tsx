@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import CompanyInterface from "../../interfaces/CompanyInterface";
 import {CompanyService} from "../../services/CompanyService";
 import './Companies.scss'
+import {Link} from "react-router-dom";
+import {toast, Toaster} from "react-hot-toast";
 
 function Companies() {
     const [companies, setCompanies] = useState<CompanyInterface[]>([]);
@@ -12,7 +14,7 @@ function Companies() {
                 const response = await new CompanyService().getAllCompanies();
                 setCompanies(response);
             } catch (error) {
-                console.error('Error fetching companies:', error);
+                toast.error('Error fetching companies:', error);
             }
         };
 
@@ -20,6 +22,7 @@ function Companies() {
     }, []);
     return (
         <>
+            <Toaster position="bottom-left" reverseOrder={false}/>
             <div className='companies-main-div'>
                 {companies.map((company) => (
                 <div className='company-div'>
@@ -27,7 +30,7 @@ function Companies() {
                         <img src={company.image}/>
                     </div>
                     <div className='company-text'>
-                        <p className='name'>{company.name}</p>
+                        <Link to={`/company/${company.id}`} className='name' > {company.name} </Link>
                     </div>
                 </div>
                     ))}

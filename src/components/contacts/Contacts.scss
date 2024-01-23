@@ -1,0 +1,66 @@
+@import '../variables.scss';
+.contact-main-div{
+  display: flex;
+.list-military-job{
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 53.3%;
+  text-align: center;
+  border-radius: 15px;
+  border: 1px solid $light-green;
+  font-size: 20px;
+  a{
+    color: $green;
+  }
+}
+}
+.contact-information{
+  display: flex;
+  width: 53.3%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-between;
+  text-align: center;
+ div{
+   display: flex;
+   padding: 10px;
+   flex-direction: column;
+   background-color: white;
+   width: 25%;
+   border-radius: 15px;
+   border: 1px solid $light-green;
+   align-items: center;
+   text-align: center;
+   justify-content: center;
+   p{
+     margin: 10px 0 0 0;
+   }
+ }
+  .icon{
+    font-size: 30px;
+    color: $green;
+  }
+}
+.text-about-project{
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 53.3%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  background-color: white;
+  border-radius: 15px;
+  border: 1px solid $light-green;
+  p{
+    margin: 10px 0 0 0;
+  }
+  h2{
+    margin: 15px 0 0 0;
+    color: $green;
+  }
+  padding-bottom: 15px;
+}

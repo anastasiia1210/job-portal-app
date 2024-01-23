@@ -1,67 +1,95 @@
 import './FilterJobOffers.scss'
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import JobCategoryInterface from "../../interfaces/JobCategoryInterface";
+import {toast} from "react-hot-toast";
+import {JobCategoryService} from "../../services/JobCategoryService";
+import {CompanyService} from "../../services/CompanyService";
+import CompanyInterface from "../../interfaces/CompanyInterface";
+import {JobOfferService} from "../../services/JobOfferService";
 
-function FilterJobOffers() {
-    // Стани для варіантів випадаючих списків
-    const [cities, setCities] = useState(['Місто', 'Київ', 'Харків', 'Львів', 'Одеса', 'Дніпро', 'Запоріжжя', 'Івано-Франківськ', 'Чернівці', 'Тернопіль']);
+function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategoryFilter, companyFilter, setCompanyFilter,
+                             militaryWorkFilter, setMilitaryWorkFilter, searchInput, setSearchInput, handleSearch}) {
+    const [cities, setCities] = useState([]);
 
-    const [categories, setCategories] = useState([
-        'Категорія',
-        'Стрілецька справа yegfusgde ufdfidsh',
-        'Морська',
-        'Танкова армія',
-        'Артилерія',
-        'Повітряні сили',
-        'Розвідка',
-        'Піхота',
-        'Кібервійська справа',
-        'Інженерна армія'
-    ]);
+    const [categories, setCategories] = useState<JobCategoryInterface[]>([]);
 
-    const [units, setUnits] = useState([
-        'Збройгі сили Укрїни ',
-        'ЕКСЛТ',
-        'ВОВКИ',
-        'Гайдамаки',
-        'Козаки',
-        'Сокіл',
-        'Беркут',
-        'Джура',
-        'Світязь',
-        'Аєро'
-    ]);
+    const [companies, setCompanies] = useState<CompanyInterface[]>([]);
+
+    const getAllCities = async () => {
+        try {
+            const response = await JobOfferService.getAllOffers();
+            const uniqueCities = Array.from(new Set(response.map(jobOffer => jobOffer.city)));
+            setCities(uniqueCities);
+        } catch (error) {
+            toast.error('Error fetching job offers:', error);
+        }
+    };
+    const getAllCategories = async () => {
+        try {
+            const response = await JobCategoryService.getAllCategories();
+            setCategories(response);
+        } catch (error) {
+            toast.error('Error fetching cvs:', error);
+        }
+    };
+
+    const getAllCompanies = async () => {
+        try {
+            const response = await new CompanyService().getAllCompanies();
+            setCompanies(response);
+        } catch (error) {
+            toast.error('Error fetching companies:', error);
+        }
+    };
+
+    const resetFilters = () => {
+       setCityFilter('');
+       setCategoryFilter('');
+       setCompanyFilter('');
+       setMilitaryWorkFilter(false);
+       setSearchInput('');
+    };
+
+    useEffect(() => {
+        getAllCategories();
+        getAllCompanies();
+        getAllCities();
+    }, []);
 
     return (
         <>
             <div className='job-offers'>
                 <div className='search-job-offer-div'>
-                    <input className='search-job-offer-input' type='search' placeholder="Пошук" />
-                    <button className='search-job-offer-button'>Пошук</button>
+                    <input className='search-job-offer-input' type='search' placeholder="Пошук"  value={searchInput} onChange={(event)=>setSearchInput(event.target.value)} />
+                    <button className='search-job-offer-button' onClick={()=>handleSearch()}>Пошук</button>
                 </div>
 
                 <div className='filter-job-offer-div'>
-                    <select>
-                        {cities.map((city, index) => (
-                            <option key={index} value={index}>{city}</option>
+                    <select onChange={(event)=>setCityFilter(event.target.value)} value={cityFilter}>
+                        <option value="">Місто</option>
+                        {cities.map((city) => (
+                            <option key={city} value={city}>{city}</option>
                         ))}
                     </select>
 
-                    <select>
-                        {categories.map((category, index) => (
-                            <option key={index} value={index}>{category}</option>
+                    <select  onChange={(event)=>setCategoryFilter(event.target.value)} value={categoryFilter}>
+                        <option value="">Категорія</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                     </select>
 
-                    <select>
-                        {units.map((unit, index) => (
-                            <option key={index} value={index}>{unit}</option>
+                    <select  onChange={(event)=>setCompanyFilter(event.target.value)} value={companyFilter}>
+                        <option value="">Підрозділ</option>
+                        {companies.map((company) => (
+                            <option key={company.id} value={company.id}>{company.name}</option>
                         ))}
                     </select>
 
-                    <input type='checkbox' name='military-work' />
+                    <input type='checkbox' name='military-work' checked={militaryWorkFilter}  onChange={(event)=>setMilitaryWorkFilter(event.target.checked)}/>
                     <label htmlFor='military-work'>Військова служба</label>
 
-                    <span className='reset-filters'>Скинути фільтри</span>
+                    <span className='reset-filters' onClick={resetFilters}>Скинути фільтри</span>
                 </div>
             </div>
         </>

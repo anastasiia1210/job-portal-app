@@ -1,9 +1,9 @@
+import Contacts from "../../components/contacts/Contacts";
+
 function ContactsPage() {
     return (
         <>
-            <div>
-                Contacts
-            </div>
+           <Contacts />
         </>
     )
 }

@@ -4,7 +4,7 @@ import axios, {AxiosResponse} from "axios";
 const URL = 'http://localhost:5555/job-offer'
 
 export class JobOfferService{
-    async getAllOffers(): Promise<JobOfferInterface[]> {
+    static async getAllOffers(): Promise<JobOfferInterface[]> {
         try {
             const response: AxiosResponse<JobOfferInterface[]> = await axios.get(URL);
             return response.data;
@@ -14,7 +14,7 @@ export class JobOfferService{
         }
     }
 
-    async getOneOffer(id: string): Promise<JobOfferInterface> {
+    static async getOneOffer(id: string): Promise<JobOfferInterface> {
         const urlId = `${URL}/${id}`;
         try {
             const response: AxiosResponse<JobOfferInterface> = await axios.get(urlId);
