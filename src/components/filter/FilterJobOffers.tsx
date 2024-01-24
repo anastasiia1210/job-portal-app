@@ -1,7 +1,7 @@
 import './FilterJobOffers.scss'
 import {useEffect, useState} from "react";
 import JobCategoryInterface from "../../interfaces/JobCategoryInterface";
-import {toast} from "react-hot-toast";
+import {toast, Toaster} from "react-hot-toast";
 import {JobCategoryService} from "../../services/JobCategoryService";
 import {CompanyService} from "../../services/CompanyService";
 import CompanyInterface from "../../interfaces/CompanyInterface";
@@ -58,10 +58,11 @@ function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategor
 
     return (
         <>
+            <Toaster position="bottom-left" reverseOrder={false}/>
             <div className='job-offers'>
                 <div className='search-job-offer-div'>
                     <input className='search-job-offer-input' type='search' placeholder="Пошук"  value={searchInput} onChange={(event)=>setSearchInput(event.target.value)} />
-                    <button className='search-job-offer-button' onClick={()=>handleSearch()}>Пошук</button>
+                    <button className='search-job-offer-button' onClick={handleSearch}>Пошук</button>
                 </div>
 
                 <div className='filter-job-offer-div'>

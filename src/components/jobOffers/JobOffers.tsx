@@ -2,10 +2,10 @@ import './JobOffers.scss'
 import {useEffect, useState} from "react";
 import JobOfferInterface from "../../interfaces/JobOfferInterface";
 import {JobOfferService} from "../../services/JobOfferService";
-import {Link} from "react-router-dom";
 import {toast, Toaster} from "react-hot-toast";
 import FilterJobOffers from "../filter/FilterJobOffers";
 import {DateService} from "../../services/DateService";
+import {Link} from "react-router-dom";
 
 function JobOffers() {
     const [jobOffers, setJobOffers] = useState<JobOfferInterface[]>([]);
@@ -21,40 +21,56 @@ function JobOffers() {
             try {
                 const response = await JobOfferService.getAllOffers();
                 setJobOffers(response);
-                //setFilteredOffres(response);
             } catch (error) {
                 toast.error('Error fetching job offers:', error);
             }
         };
         getAllOffers();
+
+        const storedCityFilter = localStorage.getItem('cityFilter') || '';
+        const storedCategoryFilter = localStorage.getItem('categoryFilter') || '';
+        const storedCompanyFilter = localStorage.getItem('companyFilter') || '';
+        const storedMilitaryWorkFilter = localStorage.getItem('militaryWorkFilter') === 'true';
+        const storedSearchInput = localStorage.getItem('searchInput') || '';
+
+        setCityFilter(storedCityFilter);
+        setCategoryFilter(storedCategoryFilter);
+        setCompanyFilter(storedCompanyFilter);
+        setMilitaryWorkFilter(storedMilitaryWorkFilter);
+        setSearchInput(storedSearchInput);
+
     }, []);
 
     useEffect(() => {
+        setFilteredOffres(filterAndSearch);
+
+        localStorage.setItem('cityFilter', cityFilter);
+        localStorage.setItem('categoryFilter', categoryFilter);
+        localStorage.setItem('companyFilter', companyFilter);
+        localStorage.setItem('militaryWorkFilter', militaryWorkFilter.toString());
+        localStorage.setItem('searchInput', searchInput);
+    }, [jobOffers, cityFilter, categoryFilter, companyFilter, militaryWorkFilter]);
+
+    const handleSearch = () => {
+        setFilteredOffres(filterAndSearch);
+    };
+
+    const filterAndSearch = () => {
         const filtered = jobOffers.filter((offer) => {
             const matchCity = !cityFilter || offer.city.toLowerCase().includes(cityFilter.toLowerCase());
             const matchCategory = !categoryFilter || offer.category.id.includes(categoryFilter);
             const matchCompany = !companyFilter || offer.company.id.includes(companyFilter);
             const matchMilitaryWork = !militaryWorkFilter || offer.militaryWork === militaryWorkFilter;
-
-            return matchCity && matchCategory && matchCompany && matchMilitaryWork;
-        }).sort((a, b) => {
-            // Assuming dateTime is a Date object property
-            return new Date(b.postingDate).getTime() - new Date(a.postingDate).getTime();
-        });
-        setFilteredOffres(filtered);
-        handleSearch();
-    }, [jobOffers, cityFilter, categoryFilter, companyFilter, militaryWorkFilter, searchInput]);
-
-    const handleSearch = () => {
-        if (searchInput.length > 0) {
-            const searchResults = filteredOffers.filter((offer) =>
-                offer.name.toLowerCase().includes(searchInput.toLowerCase())
+            const matchSearch = (
+                offer.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                offer.description.toLowerCase().includes(searchInput.toLowerCase())
             );
+            return matchCity && matchCategory && matchCompany && matchMilitaryWork && matchSearch;
+        });
+        const sorted = filtered.sort((a, b) => new Date(b.postingDate) - new Date(a.postingDate));
 
-            setFilteredOffres(searchResults);
-        }
+        return sorted;
     };
-
 
     return (
         <>
