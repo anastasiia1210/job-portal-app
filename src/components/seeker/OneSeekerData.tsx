@@ -4,6 +4,7 @@ import SeekerInterface from "../../interfaces/SeekerInterface";
 import {SeekerService} from "../../services/SeekerService";
 import './OneSeekerData.scss'
 import {DateService} from "../../services/DateService";
+import {Link} from "react-router-dom";
 
 function OneSeekerData({id}) {
     const [seeker, setSeeker] = useState<SeekerInterface>();
@@ -41,7 +42,9 @@ function OneSeekerData({id}) {
                                {seeker?.militaryWork ? (<span> ✅</span>) : (<span> &#10060;</span>)}
                            </p>
                            <div className='edit-button-div'>
+                               <Link to={`/seeker/data/edit/${id}`} className='edit-button'>
                                <button className='edit-button'>Редагувати</button>
+                               </Link>
                            </div>
                        </div>
                    <div className='seeker-image'>

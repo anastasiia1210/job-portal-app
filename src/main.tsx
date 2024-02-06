@@ -14,6 +14,7 @@ import OneCVPage from "./pages/cvsPage/OneCVPage";
 import RequestPage from "./pages/requestsPage/RequestPage";
 import OneRequestPage from "./pages/requestsPage/OneRequestPage";
 import NotificationsPage from "./pages/notificationsPage/NotificationsPage";
+import SeekerEditFormPage from "./pages/formPage/SeekerEditFormPage";
 
 const router = createBrowserRouter([
     {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "/notification",
                 element: <NotificationsPage />,
+            },
+            {
+                path: "/seeker/data/edit/:id",
+                element: <SeekerEditFormPage />,
             },
         ],
     },

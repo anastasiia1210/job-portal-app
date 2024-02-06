@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import SeekerInterface from "../interfaces/SeekerInterface";
+import SeekerInterface, {SeekerEditInterface} from "../interfaces/SeekerInterface";
 
 const URL = 'http://localhost:5555/seeker'
 export class SeekerService{
@@ -21,6 +21,17 @@ export class SeekerService{
             return response.data;
         } catch (error) {
             console.error('Error fetching seeker:', error);
+            throw error;
+        }
+    }
+
+    static async updateSeeker(id: string, updatedSeekerData: Partial<SeekerEditInterface>): Promise<SeekerInterface> {
+        const urlId = `${URL}/${id}`;
+        try {
+            const response = await axios.patch<SeekerInterface>(urlId, updatedSeekerData);
+            return response.data as SeekerInterface; // Explicitly cast the response data to SeekerInterface
+        } catch (error) {
+            console.error('Error updating seeker:', error);
             throw error;
         }
     }
