@@ -1,7 +1,7 @@
 import JobCategoryInterface from "./JobCategoryInterface";
 import SeekerInterface from "./SeekerInterface";
 
-interface CVInterface {
+export interface CVInterface {
     id: string;
     name: string;
     education?: string | null;
@@ -13,4 +13,19 @@ interface CVInterface {
     seeker: SeekerInterface;
 }
 
-export default CVInterface;
+export interface CreateCVInterface {
+    name: string;
+
+    education?: string;
+
+    experience?: string;
+
+    skills?: string;
+
+    cvLink?: string;
+
+    categoryId: string;
+
+    seekerId: string;
+}
+

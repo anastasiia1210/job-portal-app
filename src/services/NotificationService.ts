@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import NotificationInterface from "../interfaces/NotificationInterface";
+import NotificationInterface, {CreateNotificationInterface} from "../interfaces/NotificationInterface";
 
 const URL = 'http://localhost:5555/notification';
 export class NotificationService {
@@ -10,6 +10,16 @@ export class NotificationService {
             return response.data;
         } catch (error) {
             console.error('Error fetching notifications:', error);
+            throw error;
+        }
+    }
+
+    static async createNotification(data: CreateNotificationInterface): Promise<NotificationInterface[]> {
+        try {
+            const response: AxiosResponse<NotificationInterface[]> = await axios.post(URL, data);
+            return response.data;
+        } catch (error) {
+            console.error('Error create notifications:', error);
             throw error;
         }
     }

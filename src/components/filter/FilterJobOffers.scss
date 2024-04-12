@@ -29,6 +29,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    margin-left: 5px;
 
     &:hover {
       color: $yellow;
@@ -75,4 +76,13 @@
       }
     }
   }
+  .create-job-offer{
+    margin-left: 80px;
+    margin-right: 10px;
+  }
+}
+.cv-filter{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }

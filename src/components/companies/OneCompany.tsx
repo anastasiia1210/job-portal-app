@@ -1,25 +1,36 @@
 import './Companies.scss'
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import CompanyInterface from "../../interfaces/CompanyInterface";
 import {CompanyService} from "../../services/CompanyService";
 import { Toaster, toast } from 'react-hot-toast';
-import {DateService} from "../../services/DateService";
+import {EmployerService} from "../../services/EmployerService";
+import CompanyEditForm from "./CompanyEditForm";
 
 function OneCompany({id}) {
     const [company, setCompany] = useState<CompanyInterface>();
+    const [employerCompanyId, setEmployerCompanyId] = useState("")
+    const [isCompanyEditFormVisible, setCompanyEditFormVisible] = useState(false);
 
             useEffect(() => {
                 const getOneCompany = async () => {
                 try {
                 const response = await new CompanyService().getOneCompany(id);
                 setCompany(response);
+                    console.log(localStorage["id"]);
+                    console.log(localStorage["role"]);
+                if(localStorage["role"] === "employer"){
+                    const response = await new EmployerService().getEmployerById(localStorage["id"]);
+                    setEmployerCompanyId(response.company.id);
+                    console.log("company id");
+                    console.log(response.company.id);
+                }
                 console.log(response);
             } catch (error) {
                 toast.error('Error fetching job offers:', error);
             }
             };
                 getOneCompany();
-            }, []);
+            }, [isCompanyEditFormVisible]);
             return (
                 <div className='one-company-main-div'>
                     <Toaster position="bottom-left" reverseOrder={false}/>
@@ -39,10 +50,11 @@ function OneCompany({id}) {
                             </div>
                             <p  className='one-company-description'>{company?.description}</p>
                             <div className='request-button-div'>
-                                <button className='request-button'>Відгукнутися</button>
+                                {(employerCompanyId === company?.id) && (<button className='request-button' onClick={()=>setCompanyEditFormVisible(true)}>Редагувати</button>)}
                             </div>
                         </div>
                     </div>
+                    <CompanyEditForm trigger={isCompanyEditFormVisible} setTrigger={setCompanyEditFormVisible} company={company}/>
                 </div>
     );
 }

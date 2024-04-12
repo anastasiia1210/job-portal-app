@@ -4,10 +4,13 @@ import {JobOfferService} from "../../services/JobOfferService";
 import {DateService} from "../../services/DateService";
 import './JobOffers.scss'
 import {toast, Toaster} from "react-hot-toast";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import JobRequestAddForm from "../jobRequests/JobRequestAddForm";
 
 function OneJobOffer({id}) {
     const [jobOffer, setJobOffer] = useState<JobOfferInterface>();
+    const [isJobRequestAddFormVisible, setIsJobRequestAddFormVisible] = useState(false);
+    let navigate = useNavigate();
 
     useEffect(() => {
         const getOneOffer = async () => {
@@ -23,16 +26,14 @@ function OneJobOffer({id}) {
         getOneOffer();
     }, []);
 
-    const handleClick = () => {
-       if (localStorage.token){
-           console.log('click')
-       }else{
-           toast(
-               "Увійдіть в акаунт",
-               {
-                   duration: 3000,
-               });
-       }
+    const deleteJobOffer = async() => {
+        try {
+            const response = await JobOfferService.deleteOffer(id);
+            console.log(response);
+            navigate('/job-offers');
+        } catch (error) {
+            toast.error('Error fetching job offers:', error);
+        }
     };
 
     return (
@@ -40,7 +41,14 @@ function OneJobOffer({id}) {
             <Toaster position="bottom-left" reverseOrder={false}/>
                 <div className='jobOffer-div' key={jobOffer?.id}>
                     <div className='jobOffer-text'>
+                        <div className="name-buttons">
                         <h1  className='jobOffer-name'>{jobOffer?.name}</h1>
+                            {(localStorage["role"] == "employer") && (
+                        <div>
+                            <Link to={`/job-offer/edit/${id}`}><button className="btn btn-success btn-sm">Редагувати</button></Link>
+                            <button className="btn btn-danger btn-sm" onClick={deleteJobOffer}>Видалити</button>
+                        </div>)}
+                        </div>
                         <p  className='jobOffer-salary'>Зарплата: {jobOffer?.salary} грн</p>
                         <p  className='jobOffer-city'>Місто: {jobOffer?.city}</p>
                         <p className='one-seeker-military-exp'>Тип:
@@ -57,10 +65,12 @@ function OneJobOffer({id}) {
                         <p className='jobOffer-conditions'>{jobOffer?.conditions}</p>
                         <div className='request-date'>
                         <p className='jobOffer-postingDate'>{DateService.formatDateTimeToString(jobOffer?.postingDate.toString())}</p>
-                        <button className='request-button' onClick={handleClick} >Відгукнутися</button>
+                            {(localStorage["role"] == "seeker") && (<button className='request-button' onClick={() => setIsJobRequestAddFormVisible(true)}>Відгукнутися</button>)}
+                            {(localStorage["role"] == "employer") && (<Link to={`/requests/${id}`}><button className='request-button'>Заявки</button></Link>)}
                         </div>
                     </div>
             </div>
+            {(localStorage["role"] == "seeker") && <JobRequestAddForm trigger={isJobRequestAddFormVisible} setTrigger={setIsJobRequestAddFormVisible} jobOffer={jobOffer}/>}
         </div>
     );
 }

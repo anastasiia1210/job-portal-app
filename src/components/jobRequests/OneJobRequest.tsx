@@ -1,16 +1,14 @@
 import {useEffect, useState} from "react";
-import CVInterface from "../../interfaces/CVInterface";
-import {CVService} from "../../services/CVService";
 import {toast, Toaster} from "react-hot-toast";
-import jobRequestInterface from "../../interfaces/JobRequestInterface";
+import {JobRequestInterface} from "../../interfaces/JobRequestInterface";
 import {JobRequestService} from "../../services/JobRequestService";
 import {DateService} from "../../services/DateService";
-import {faFile} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
+import {NotificationService} from "../../services/NotificationService";
 function OneJobRequest({id}) {
-    const [jobRequest, setJobRequest] = useState<jobRequestInterface>();
-
+    const [jobRequest, setJobRequest] = useState<JobRequestInterface>();
+    const navigate = useNavigate();
     useEffect(() => {
         const getOneRequest = async () => {
             try {
@@ -24,28 +22,66 @@ function OneJobRequest({id}) {
 
         getOneRequest();
     }, []);
+
+    async function editStatus(status) {
+        try {
+            let text;
+            if(status){
+                text = "Вашу заявку успішно підтверджено. Скоро з вами зв'яжуться для уточнення деталей."
+            }else {
+                text = "На жаль, вашу заявку відхилено."
+            }
+            const response = await JobRequestService.updateJobRequest(jobRequest?.id, {"status": status})
+            const notification = await NotificationService.createNotification(
+                {"text": `${text}`, "jobRequestId": `${jobRequest?.id}`, "seekerId": `${jobRequest?.seeker.id}`})
+            console.log(response);
+            console.log("notification");
+            console.log(notification);
+        } catch (error) {
+            toast.error('Error edit status job request:', error);
+        }
+    }
+
+    async function deleteRequest() {
+        try {
+            const response = await JobRequestService.deleteRequest(jobRequest?.id);
+            console.log(response);
+            navigate("/requests");
+        } catch (error) {
+            toast.error('Error fetching job request:', error);
+        }
+    }
+
     return(
         <div className='one-jobRequest-main-div'>
             <Toaster position="bottom-left" reverseOrder={false}/>
             <div className='one-jobRequest-div' >
                 <div className='one-jobRequest-text'>
-                    <h2 className='green-text' style={{ margin: 0 }}>Вакансія</h2>
-                    <Link to={`/job-offer/${jobRequest?.jobOffer.id}`}><h1>{jobRequest?.jobOffer.name}</h1></Link>
+                    {localStorage["role"] == "seeker" && (<div><Link to={`/job-offer/${jobRequest?.jobOffer.id}`}><h1 className="name">{jobRequest?.jobOffer.name}</h1></Link>
                     <p>Зарплата: {jobRequest?.jobOffer.salary}</p>
                     <p>Місто: {jobRequest?.jobOffer.city}</p>
+                    </div>)}
+                    {localStorage["role"] == "employer" && (<h1 className="name">{jobRequest?.seeker.firstName} {jobRequest?.seeker.lastName}</h1>)}
                     <hr/>
-                    <h2 className='green-text'>Статус відгука</h2>
+                    {localStorage["role"] == "seeker" && (<>
+                    <h3 className='green-text'>Статус заявки</h3>
                     {jobRequest?.status === true && (<><p className='status-yes'>Підтверджено</p>
                         <p>Вашу заявку прийнято, найближчим часом з вами зв'яжуться. </p></>)}
                     {jobRequest?.status === false && (<><p className='status-no'>Відхилено</p>
                     <p>На жаль вашу заявку відхилили.</p></>)}
+                    {jobRequest?.status == null && (<p>Не опрацьована</p>)}
                     <hr/>
-                    <h2>Чим відгукнулись</h2>
+                    </>)}
+                    <h3>Чим відгукнулись</h3>
                     <p  className='jobOffer-description'>Резюме <Link to={`/cv/${jobRequest?.cv?.id}`}>{jobRequest?.cv?.name}</Link></p>
                     <p>{jobRequest?.text}</p>
                     <div className='request-date'>
                         <p className='postingDate'>{DateService.formatDateTimeToString(jobRequest?.postingDate.toString())}</p>
-                        <button className='request-button' >Редагувати</button>
+                        {localStorage["role"] == "seeker" && (<button className='request-button' onClick={deleteRequest}>Скасувати</button>)}
+                        {localStorage["role"] == "employer" && (<div>
+                            <button className="btn btn-success btn-sm" style={{ marginRight: '10px' }} onClick={() => editStatus(true)}>Прийняти</button>
+                            <button className="btn btn-danger btn-sm"onClick={() => editStatus(false)}>Відхилити</button>
+                        </div>)}
                     </div>
                 </div>
             </div>

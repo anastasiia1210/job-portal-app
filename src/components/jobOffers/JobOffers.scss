@@ -8,7 +8,7 @@
   margin-left: auto;
   margin-right: auto;
   min-height: 130px;
-  width: 53.3%;
+  width: 55%;
   padding: 15px;
   background: white;
   margin-bottom: 30px;
@@ -38,7 +38,7 @@
   .jobOffer-img{
     margin: 15px 15px 0 0;
     img {
-      height: 100px;
+      height: 130px;
     }
   }
 }
@@ -94,6 +94,14 @@
     text-decoration: none;
     &:hover{
       text-decoration: underline;
+    }
+  }
+  .name-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    button{
+      margin-left: 10px;
     }
   }
 }

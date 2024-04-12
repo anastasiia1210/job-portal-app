@@ -4,12 +4,11 @@
   flex-direction: column;
 
   .cv-div {
-    margin: 20px auto 20px auto;
+    margin: 5px auto 10px auto;
     min-height: 90px;
     width: 53.3%;
     padding: 15px;
     background: white;
-    margin-bottom: 30px;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -31,13 +30,33 @@
       border: 1px solid $light-green;
     }
   }
+  .header-for-add-button{
+    margin: 20px auto 0 auto;
+    width: 53.3%;
+    display: flex;
+    justify-content: space-between;
+
+    .header-text{
+      margin: 0;
+      color:$green;
+      padding: 0;
+    }
+    .add-cv-button {
+      background-color: $background;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: $green;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 .one-cv-main-div{
   display: flex;
-  min-height: calc(100vh - 90px);
   justify-content: center;
-  align-items: center;
   .cv-div{
     margin: 20px;
     padding: 20px;
@@ -51,7 +70,7 @@
     p{
       margin: 10px 0 0 0;
     }
-    h1, h2{
+    h2, h4{
       margin: 20px 0 0 0;
       color: $green;
     }
@@ -63,6 +82,14 @@
       text-decoration: none;
       &:hover{
        text-decoration: underline;
+      }
+    }
+    .name-buttons{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      button{
+        margin-left: 10px;
       }
     }
   }

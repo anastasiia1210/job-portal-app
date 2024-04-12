@@ -1,4 +1,3 @@
-import CVInterface from "../interfaces/CVInterface";
 import axios, {AxiosResponse} from "axios";
 import JobCategoryInterface from "../interfaces/JobCategoryInterface";
 
@@ -7,7 +6,7 @@ const URL = 'http://localhost:5555/job-category'
 export class JobCategoryService{
     static async getAllCategories(): Promise<JobCategoryInterface[]> {
         try {
-            const response: AxiosResponse<CVInterface[]> = await axios.get(URL);
+            const response: AxiosResponse<JobCategoryInterface[]> = await axios.get(URL);
             return response.data;
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -15,10 +14,10 @@ export class JobCategoryService{
         }
     }
 
-    static async getOneCV(id: string): Promise<CVInterface> {
+    static async getOneCategory(id: string): Promise<JobCategoryInterface> {
         const urlId = `${URL}/${id}`;
         try {
-            const response: AxiosResponse<CVInterface> = await axios.get(urlId);
+            const response: AxiosResponse<JobCategoryInterface> = await axios.get(urlId);
             return response.data;
         } catch (error) {
             console.error('Error fetching cv:', error);

@@ -29,7 +29,17 @@ export class SeekerService{
         const urlId = `${URL}/${id}`;
         try {
             const response = await axios.patch<SeekerInterface>(urlId, updatedSeekerData);
-            return response.data as SeekerInterface; // Explicitly cast the response data to SeekerInterface
+            return response.data as SeekerInterface;
+        } catch (error) {
+            console.error('Error updating seeker:', error);
+            throw error;
+        }
+    }
+
+    static async addSeeker(addSeekerData: Partial<SeekerInterface>): Promise<SeekerInterface> {
+        try {
+            const response = await axios.post<SeekerInterface>(URL, addSeekerData);
+            return response.data as SeekerInterface;
         } catch (error) {
             console.error('Error updating seeker:', error);
             throw error;

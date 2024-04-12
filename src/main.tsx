@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import CompaniesPage from "./pages/companiesPage/CompananiesPage";
@@ -15,6 +16,13 @@ import RequestPage from "./pages/requestsPage/RequestPage";
 import OneRequestPage from "./pages/requestsPage/OneRequestPage";
 import NotificationsPage from "./pages/notificationsPage/NotificationsPage";
 import SeekerEditFormPage from "./pages/formPage/SeekerEditFormPage";
+import SeekerAddFormPage from "./pages/formPage/SeekerAddFormPage";
+import AdminPage from "./pages/admin/AdminPage";
+import EmployerAddFormPage from "./pages/formPage/EmployerAddFormPage";
+import OneEmployerDataPage from "./pages/employerPage/OneEmployerDataPage";
+import EmployerEditFormPage from "./pages/formPage/EmployerEditFormPage";
+import JobOfferAddFormPage from "./pages/formPage/JobOfferAddFormPage";
+import JobOfferEditFormPage from "./pages/formPage/JobOfferEditFormPage";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +31,10 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
+                element: <JobOffersPage />,
+            },
+            {
+                path: "/job-offers",
                 element: <JobOffersPage />,
             },
             {
@@ -36,6 +48,14 @@ const router = createBrowserRouter([
             {
                 path: "/job-offer/:id",
                 element: <OneJobOfferPage />,
+            },
+            {
+                path: "/job-offer/add",
+                element: <JobOfferAddFormPage />,
+            },
+            {
+                path: "/job-offer/edit/:id",
+                element: <JobOfferEditFormPage />,
             },
             {
                 path: "/company/:id",
@@ -58,6 +78,10 @@ const router = createBrowserRouter([
                 element: <RequestPage />,
             },
             {
+                path: "/requests/:id",
+                element: <RequestPage />,
+            },
+            {
                 path: "/request/:id",
                 element: <OneRequestPage />,
             },
@@ -69,8 +93,29 @@ const router = createBrowserRouter([
                 path: "/seeker/data/edit/:id",
                 element: <SeekerEditFormPage />,
             },
+            {
+                path: "/seeker/add",
+                element: <SeekerAddFormPage />,
+            },
+            {
+                path: "/employer/add",
+                element: <EmployerAddFormPage />,
+            },
+            {
+                path: "/employer/data/:id",
+                element: <OneEmployerDataPage />,
+            },
+            {
+                path: "/employer/data/edit/:id",
+                element: <EmployerEditFormPage />,
+            },
+            {
+                path: "/admin/*",
+                element:  localStorage.getItem("role") === "admin" && (<AdminPage/>),
+            },
         ],
     },
 ]);
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<RouterProvider router={router} />)

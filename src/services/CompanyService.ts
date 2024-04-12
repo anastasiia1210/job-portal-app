@@ -24,4 +24,25 @@ export class CompanyService{
             throw error;
         }
     }
+
+    async createCompany(companyData: Partial<CompanyInterface>): Promise<CompanyInterface> {
+        try {
+            const response: AxiosResponse<CompanyInterface> = await axios.post(URL, companyData);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating company:', error);
+            throw error;
+        }
+    }
+
+    async updateCompany(id: string, updatedCompanyData: Partial<CompanyInterface>): Promise<CompanyInterface> {
+        const urlId = `${URL}/${id}`;
+        try {
+            const response = await axios.patch<CompanyInterface>(urlId, updatedCompanyData);
+            return response.data as CompanyInterface;
+        } catch (error) {
+            console.error('Error updating company:', error);
+            throw error;
+        }
+    }
 }

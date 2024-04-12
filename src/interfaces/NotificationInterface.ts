@@ -1,7 +1,7 @@
-import JobRequestInterface from "./JobRequestInterface";
+import {JobRequestInterface} from "./JobRequestInterface";
 import SeekerInterface from "./SeekerInterface";
 
-interface NotificationInterface {
+export default interface NotificationInterface {
     id: string;
     text?: string;
     postingDate: Date;
@@ -10,4 +10,9 @@ interface NotificationInterface {
     seeker: SeekerInterface;
 }
 
-export default NotificationInterface;
+export interface CreateNotificationInterface {
+    text: string;
+    jobRequestId: string;
+    seekerId: string;
+}
+

@@ -6,6 +6,7 @@ import {toast, Toaster} from "react-hot-toast";
 import FilterJobOffers from "../filter/FilterJobOffers";
 import {DateService} from "../../services/DateService";
 import {Link} from "react-router-dom";
+import {EmployerService} from "../../services/EmployerService";
 
 function JobOffers() {
     const [jobOffers, setJobOffers] = useState<JobOfferInterface[]>([]);
@@ -16,15 +17,23 @@ function JobOffers() {
     const [militaryWorkFilter, setMilitaryWorkFilter]=useState(false);
     const [searchInput, setSearchInput] = useState('');
 
-    useEffect(() => {
-        const getAllOffers = async () => {
-            try {
-                const response = await JobOfferService.getAllOffers();
-                setJobOffers(response);
-            } catch (error) {
-                toast.error('Error fetching job offers:', error);
+    const getAllOffers = async () => {
+        try {
+            const offers = await JobOfferService.getAllOffers();
+            if(localStorage["role"]=="employer"){
+                const employer = await new EmployerService().getEmployerById(localStorage["id"]);
+                const companyId = employer.company.id;
+                const companyOffers = offers.filter(offer => offer.company.id === companyId);
+                setJobOffers(companyOffers);
+            } else {
+                setJobOffers(offers);
             }
-        };
+        } catch (error) {
+            toast.error('Error fetching job offers:', error);
+        }
+    };
+
+    useEffect(() => {
         getAllOffers();
 
         const storedCityFilter = localStorage.getItem('cityFilter') || '';
@@ -43,13 +52,12 @@ function JobOffers() {
 
     useEffect(() => {
         setFilteredOffres(filterAndSearch);
-
         localStorage.setItem('cityFilter', cityFilter);
         localStorage.setItem('categoryFilter', categoryFilter);
         localStorage.setItem('companyFilter', companyFilter);
         localStorage.setItem('militaryWorkFilter', militaryWorkFilter.toString());
         localStorage.setItem('searchInput', searchInput);
-    }, [jobOffers, cityFilter, categoryFilter, companyFilter, militaryWorkFilter]);
+    }, [jobOffers, cityFilter, categoryFilter, companyFilter, militaryWorkFilter, searchInput]);
 
     const handleSearch = () => {
         setFilteredOffres(filterAndSearch);

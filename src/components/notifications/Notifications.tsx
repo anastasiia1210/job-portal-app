@@ -13,7 +13,10 @@ function Notifications(){
         const getAllNotifications = async () => {
             try {
                 const response = await NotificationService.getAllNotificationsOneSeeker(localStorage.id);
-                setNotifications(response);
+                const sortedNotifications = response.sort((a, b) => {
+                    return new Date(b.postingDate).getTime() - new Date(a.postingDate).getTime();
+                });
+                setNotifications(sortedNotifications);
                 console.log(response)
             } catch (error) {
                 toast.error('Error fetching job requests:', error);

@@ -6,14 +6,14 @@ import {JobCategoryService} from "../../services/JobCategoryService";
 import {CompanyService} from "../../services/CompanyService";
 import CompanyInterface from "../../interfaces/CompanyInterface";
 import {JobOfferService} from "../../services/JobOfferService";
+import {Link} from "react-router-dom";
 
 function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategoryFilter, companyFilter, setCompanyFilter,
                              militaryWorkFilter, setMilitaryWorkFilter, searchInput, setSearchInput, handleSearch}) {
     const [cities, setCities] = useState([]);
-
     const [categories, setCategories] = useState<JobCategoryInterface[]>([]);
-
     const [companies, setCompanies] = useState<CompanyInterface[]>([]);
+    const [localInput, setLocalInput] = useState('');
 
     const getAllCities = async () => {
         try {
@@ -43,14 +43,16 @@ function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategor
     };
 
     const resetFilters = () => {
+        setLocalInput('');
+        setSearchInput('');
        setCityFilter('');
        setCategoryFilter('');
        setCompanyFilter('');
        setMilitaryWorkFilter(false);
-       setSearchInput('');
     };
 
     useEffect(() => {
+        setLocalInput(localStorage.getItem('searchInput'));
         getAllCategories();
         getAllCompanies();
         getAllCities();
@@ -61,12 +63,12 @@ function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategor
             <Toaster position="bottom-left" reverseOrder={false}/>
             <div className='job-offers'>
                 <div className='search-job-offer-div'>
-                    <input className='search-job-offer-input' type='search' placeholder="Пошук"  value={searchInput} onChange={(event)=>setSearchInput(event.target.value)} />
-                    <button className='search-job-offer-button' onClick={handleSearch}>Пошук</button>
+                    <input className='search-job-offer-input' type='search' placeholder="Пошук"  value={localInput} onChange={(event)=>setLocalInput(event.target.value)} />
+                    <button className='search-job-offer-button' onClick={() => { setSearchInput(localInput); handleSearch();}}>Пошук</button>
                 </div>
 
                 <div className='filter-job-offer-div'>
-                    <select onChange={(event)=>setCityFilter(event.target.value)} value={cityFilter}>
+                    <select onChange={(event)=>setCityFilter(event.target.value)} value={cityFilter} >
                         <option value="">Місто</option>
                         {cities.map((city) => (
                             <option key={city} value={city}>{city}</option>
@@ -80,17 +82,18 @@ function FilterJobOffers({ cityFilter, setCityFilter, categoryFilter, setCategor
                         ))}
                     </select>
 
+                    {(localStorage["role"] != "employer") && (
                     <select  onChange={(event)=>setCompanyFilter(event.target.value)} value={companyFilter}>
                         <option value="">Підрозділ</option>
                         {companies.map((company) => (
                             <option key={company.id} value={company.id}>{company.name}</option>
                         ))}
                     </select>
-
-                    <input type='checkbox' name='military-work' checked={militaryWorkFilter}  onChange={(event)=>setMilitaryWorkFilter(event.target.checked)}/>
-                    <label htmlFor='military-work'>Військова служба</label>
-
+                    )}
+                    <input type='checkbox' name='military-work' checked={militaryWorkFilter} onChange={(event)=>setMilitaryWorkFilter(event.target.checked)}/>
+                    <label htmlFor='military-work' style={{ marginLeft: '8px' }}>Військова служба</label>
                     <span className='reset-filters' onClick={resetFilters}>Скинути фільтри</span>
+                    {(localStorage["role"] == "employer") && (<Link to="/job-offer/add"><button className='search-job-offer-button create-job-offer'>Створити</button></Link>)}
                 </div>
             </div>
         </>

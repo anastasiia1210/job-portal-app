@@ -1,10 +1,11 @@
 @import '../variables.scss';
 .jobRequest-main-div{
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
 
   .jobRequest-div {
-    margin: 20px auto 20px auto;
+    margin: 0 auto 0 auto;
     min-height: 90px;
     width: 53.3%;
     padding: 15px;
@@ -15,12 +16,13 @@
     flex-direction: column;
 
     .name-status{
+      margin-top: 0;
       display: flex;
       justify-content: space-between;
     }
     .status-yes{
       text-align: right;
-      margin-top: 0px;
+      margin-top: 0;
       color: green;
     }
     .status-no{
@@ -68,9 +70,12 @@
     p{
       margin: 10px 0 0 0;
     }
-    h1, h2{
+    h1, h3{
       margin: 10px 0 0 0;
       color: $green;
+    }
+    .name{
+      margin-top: 0;
     }
     a{
       color: $green;

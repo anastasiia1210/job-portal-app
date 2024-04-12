@@ -1,5 +1,4 @@
 import './Contacts.scss'
-import { FaLocationDot } from "react-icons/fa6";
 import {FaPhoneAlt, FaTelegramPlane} from "react-icons/fa";
 import {MdEmail} from "react-icons/md";
 

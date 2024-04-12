@@ -5,22 +5,35 @@ import {useEffect, useState} from "react";
 import { jwtDecode } from "jwt-decode";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBell, faUser} from "@fortawesome/free-solid-svg-icons";
+import SeekerSignUpForm from "../login/SeekerSignUpForm";
+import {EmployerService} from "../../services/EmployerService";
 
 function Header() {
     const navigate = useNavigate();
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
+    const [isSignUpFormVisible, setIsSignUpFormVisible] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [role, setRole] = useState(null);
+    const [companyId, setComplanyId] = useState('');
 
     useEffect(() => {
         setToken(localStorage.getItem('token'));
     });
+
+    const getCompanyId = async (role) => {
+        if (role == "employer") {
+            const employer = await new EmployerService().getEmployerById(localStorage["id"])
+            setComplanyId(employer.company.id);
+            console.log(companyId);
+        }
+    }
 
     useEffect(() => {
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
                 setRole(decodedToken.role);
+                getCompanyId(decodedToken.role);
             } catch (error) {
                 console.error('Error decoding token:', error.message);
             }
@@ -48,6 +61,10 @@ function Header() {
                           <FontAwesomeIcon icon={faUser} />
                       </NavLink>
                   </div>)}
+                      {role == "employer" && (<NavLink to={`/employer/data/${localStorage.id}`} className='headerText' >
+                          <FontAwesomeIcon icon={faUser} />
+                      </NavLink>)
+                      }
                       {token ?  <p className='headerText' onClick={handleLogout}>Вийти</p> : <p className='headerText' onClick={() => setIsLoginFormVisible(true)}>Увійти</p>}
                   </div>
               </header>
@@ -55,17 +72,24 @@ function Header() {
             <div>
             <header className='secondHeader'>
                 <NavLink to='/' className='headerText'>Вакансії</NavLink>
-                <NavLink to='/companies' className='headerText'>Підрозділи</NavLink>
+                {role != "employer" && <NavLink to='/companies' className='headerText'>Підрозділи</NavLink>}
+                {role == "employer" && <NavLink to={`/company/${companyId}`} className='headerText'>Підрозділ</NavLink>}
                 <NavLink to='/contacts' className='headerText'>Контакти</NavLink>
                 {role == 'seeker' &&
                     (<>
                         <NavLink to='/requests' className='headerText' >Заявки</NavLink>
                         <NavLink to='/cv' className='headerText' >Резюме</NavLink>
                         </>)}
+                {role == 'employer' &&
+                    (<>
+                        <NavLink to='/cv' className='headerText' >Резюме</NavLink>
+                    </>)}
+
 
             </header>
             </div>
-            <SeekerLoginForm trigger={isLoginFormVisible} setTrigger={setIsLoginFormVisible} setToken={setToken}/>
+            <SeekerLoginForm trigger={isLoginFormVisible} setTrigger={setIsLoginFormVisible} setToken={setToken} setIsSignUpFormVisible={setIsSignUpFormVisible}/>
+            <SeekerSignUpForm trigger={isSignUpFormVisible} setTrigger={setIsSignUpFormVisible}/>
         </div>
     )
 }
